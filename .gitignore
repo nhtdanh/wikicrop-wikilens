@@ -1,0 +1,22 @@
+# Ignore python caches
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Ignore local config files
+.env
+.env.local
+.env.*.local
+
+# Ignore unused model file to save Git repository space
+models/MobileNetV3LargeModelBaseLine.keras
+
+# Ignore database initial SQL and setup tool (already run)
+init.sql
+setup_db.py
+
+# Ignore test cropped images
+*.png
+*.jpg
+*.JPG
+*.jpeg

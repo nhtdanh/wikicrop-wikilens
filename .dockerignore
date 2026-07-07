@@ -1,0 +1,14 @@
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+init.sql
+setup_db.py
+*.png
+*.jpg
+*.JPG
+*.jpeg
+.git
+.github
+DEPLOY_GUIDE.md
