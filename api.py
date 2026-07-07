@@ -31,12 +31,10 @@ class SearchRequest(BaseModel):
 
 # Dùng Dependency Injection mộc mạc: Biến toàn cục sẽ được set từ main.py
 leaf_model_instance = None
-general_model_instance = None
 
-def init_api_models(leaf, general):
-    global leaf_model_instance, general_model_instance
+def init_api_models(leaf):
+    global leaf_model_instance
     leaf_model_instance = leaf
-    general_model_instance = general
 
 @router.post("/ai/search")
 async def ai_search(request: SearchRequest):
@@ -140,3 +138,30 @@ async def ai_search(request: SearchRequest):
     except Exception as e:
         print(f"❌ Lỗi xử lý AI Search: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
+
+from fastapi.responses import JSONResponse
+
+@router.get("/health")
+async def health_check():
+    db_status = "healthy"
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT 1;")
+        cursor.fetchone()
+        cursor.close()
+        release_db_connection(conn)
+    except Exception as e:
+        db_status = f"unhealthy: {str(e)}"
+
+    model_status = "healthy" if leaf_model_instance is not None else "unhealthy"
+    overall_status = "healthy" if (db_status == "healthy" and model_status == "healthy") else "unhealthy"
+
+    return JSONResponse(
+        status_code=200 if overall_status == "healthy" else 500,
+        content={
+            "status": overall_status,
+            "database": db_status,
+            "model": model_status
+        }
+    )

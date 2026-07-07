@@ -5,7 +5,7 @@ import uvicorn
 from contextlib import asynccontextmanager # <--- 1. Import thêm thư viện này
 
 # Import các thành phần đã tách
-from utils.models import get_leaf_model, get_general_model
+from utils.models import get_leaf_model
 from api import router as api_router, init_api_models
 from config import init_db_pool
 
@@ -14,11 +14,10 @@ from config import init_db_pool
 print("⏳ Đang khởi động hệ thống...")
 print("⏳ Đang nạp các mô hình AI vào RAM/GPU (Chỉ nạp 1 lần)...")
 leaf_model_global = get_leaf_model()
-general_model_global = get_general_model()
 print("✅ Nạp mô hình thành công!")
 
 # Tiêm (Inject) model vào API module
-init_api_models(leaf_model_global, general_model_global)
+init_api_models(leaf_model_global)
 
 # 2. Định nghĩa hàm lifespan thay cho @app.on_event
 @asynccontextmanager

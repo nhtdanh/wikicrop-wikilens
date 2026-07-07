@@ -48,8 +48,16 @@ Khi Render báo deploy thành công (`Live`), bạn có thể gọi API thông q
 * **Địa chỉ:** `https://<ten-app-cua-ban>.onrender.com`
 
 ### Endpoint kiểm tra sức khỏe hệ thống (Health Check)
-* **GET** `https://<ten-app-cua-ban>.onrender.com/`
-* Trả về: Giao diện tài liệu Swagger/Redoc hiển thị các API có sẵn.
+* **GET** `https://<ten-app-cua-ban>.onrender.com/api/health`
+* Trả về:
+  ```json
+  {
+    "status": "healthy",
+    "database": "healthy",
+    "model": "healthy"
+  }
+  ```
+  *(Status code: `200` nếu mọi thứ ổn định, hoặc `500` nếu có sự cố với kết nối DB hoặc mô hình AI chưa được load).*
 
 ### Endpoint nhận dạng ảnh
 * **POST** `https://<ten-app-cua-ban>.onrender.com/api/ai/search`
