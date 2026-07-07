@@ -1,8 +1,15 @@
+import os
+# Tối ưu hóa bộ nhớ TensorFlow trên môi trường CPU/RAM thấp (như Render Free Tier)
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+os.environ['OMP_NUM_THREADS'] = '1'
+os.environ['TF_NUM_INTRA_OP_THREADS'] = '1'
+os.environ['TF_NUM_INTEROP_THREADS'] = '1'
+
 import threading
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
-from contextlib import asynccontextmanager # <--- 1. Import thêm thư viện này
+from contextlib import asynccontextmanager
 
 # Import các thành phần đã tách
 from utils.models import get_leaf_model
@@ -10,19 +17,18 @@ from api import router as api_router, init_api_models
 from config import init_db_pool
 
 
-# ================= LIFECYCLE: KHỞI TẠO HỆ THỐNG =================
-print("⏳ Đang khởi động hệ thống...")
-print("⏳ Đang nạp các mô hình AI vào RAM/GPU (Chỉ nạp 1 lần)...")
-leaf_model_global = get_leaf_model()
-print("✅ Nạp mô hình thành công!")
-
-# Tiêm (Inject) model vào API module
-init_api_models(leaf_model_global)
-
 # 2. Định nghĩa hàm lifespan thay cho @app.on_event
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # --- PHẦN CODE CHẠY TRƯỚC YIELD TƯƠNG ĐƯƠNG VỚI "STARTUP" ---
+    print("⏳ Đang khởi động hệ thống...")
+    print("⏳ Đang nạp các mô hình AI vào RAM/GPU (Chỉ nạp 1 lần)...")
+    leaf_model_global = get_leaf_model()
+    print("✅ Nạp mô hình thành công!")
+    
+    # Tiêm (Inject) model vào API module
+    init_api_models(leaf_model_global)
+
     print("ℹ️ RabbitMQ Worker bị tắt trong phiên bản Standalone-AI.")
     init_db_pool()
 
