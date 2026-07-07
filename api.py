@@ -142,6 +142,7 @@ async def ai_search(request: SearchRequest):
 from fastapi.responses import JSONResponse
 
 @router.get("/health")
+@router.head("/health")
 async def health_check():
     db_status = "healthy"
     try:
