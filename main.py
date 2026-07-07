@@ -1,3 +1,7 @@
+import faulthandler
+faulthandler.enable()
+
+import psycopg2 # BẮT BUỘC: Import psycopg2 trước Keras/TensorFlow để tránh xung đột thư viện OpenSSL gây lỗi Segmentation Fault (Exit code 139)
 import os
 # Tối ưu hóa bộ nhớ TensorFlow trên môi trường CPU/RAM thấp (như Render Free Tier)
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
