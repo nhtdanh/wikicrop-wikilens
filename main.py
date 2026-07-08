@@ -48,13 +48,13 @@ async def lifespan(app: FastAPI):
 # 3. Truyền hàm lifespan vào tham số khi khởi tạo app
 app = FastAPI(title="Plant AI Service", lifespan=lifespan)
 
-# app.add_middleware(
-#     CORSMiddleware,
-#     allow_origins=["*"],  # Cho phép tất cả các nguồn (có thể điều chỉnh sau)
-#     allow_credentials=True,
-#     allow_methods=["*"],
-#     allow_headers=["*"],
-# )
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Cho phép tất cả các nguồn
+    allow_credentials=False,  # Không cho phép credentials khi origins là "*" để tránh lỗi Starlette/FastAPI
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Gắn router từ api.py vào app (đặt tiền tố là /api)
 app.include_router(api_router, prefix="/api")
